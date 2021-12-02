@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.2.0/dist/vuetify.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuex@3.2.0/dist/vuex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.3.0/dist/vuetify.js"></script>
+
+<script src="./js/TableMaker.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/APIHelpers.js" type="text/javascript" charset="utf-8"></script>
+<script src="./json/ONDB.js" type="text/javascript" charset="utf-8"></script>
+<link href="./css/all.css" rel="stylesheet" type="text/css">
+
+
+</head>
+
+
+<title>ONDB Home</title>
+
+<head>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">ONDB</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="./html/Search.html">Search</a>
+                <a class="nav-item nav-link" href="./html/Add.html">Add</a>
+                <a class="nav-item nav-link" href="./html/Edit.html">Edit</a>
+                <a class="mr-sm-2 nav-item nav-link" href="./html/Info.html">Contact Us</a>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <div id="topDiv" class="row justify-content-center">
+        <h2>Welcome to the Oxfordshire Surname Database.</h2>
+    </div>
+    <div class="row justify-content-center">
+        <h4>Some other information here.</h4>
+    </div>
+    <br>
+
+    <!--button class="btn btn-primary btn-sm" onclick="localGet()" style="margin-left: 25px">Show all records</button>
+    <p>
+
+        <hr>
+        <div class="row justify-content-center">
+            <div class="col-11">
+                <table id="apiTable" class="table table-striped table-hover table-sm"></table>
+            </div>
+        </div-->
+
+    <!--- VUE TABLE CONTENT-->
+    <div id="app">
+        <v-app>
+            <!--img src="./assets/longprotest.jpg" alt="Banner" style="width:100%; height: 80px">
+                <div class="top-left" style="color: white"> Protest Songs </div-->
+            <div class="container">
+
+                <v-card>
+
+                    <v-card-title>
+                        All records:
+                        <v-spacer></v-spacer>
+                        <v-text-field v-model="search" label="Keyword Search" clearable></v-text-field>
+                        <br>
+
+                        <!--append-icon="mdi-magnify"-->
+                    </v-card-title>
+                    <div style="margin-left: 20px">For a more detailed search, go to the
+                        <a href="./html/Search.html">search page.</a>
+                    </div>
+                    <br>
+
+                    <v-data-table :headers="headers" :items="masterDB" :search="search" :items-per-page="20" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" dense @click:row="handleClick($event)">
+                    </v-data-table>
+
+                </v-card>
+
+
+
+
+            </div>
+
+
+        </v-app>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content justify-content-center">
+
+
+                <div id="modalTitle" class="modal-header justify-content-center">
+                    <h3>{{ this.chosenItem.Surname + ", " + this.chosenItem.Firstname}} </h3>
+                </div>
+
+
+                <!--div id="modalImage" style="text-align: center; margin-bottom: 30px"></div-->
+                <div style="margin-left: 25px">
+                    <p id="modalSurname">Surname: <b>{{ this.chosenItem.Surname }} </b> </p>
+                    <p id="modalFirstname">First Name: <b>{{ this.chosenItem.Firstname }} </b> </p>
+                    <p id="modalYear">Year: <b>{{ this.chosenItem.Date }} </b></p>
+                    <p id="modalLocation">Location: <b> {{ this.chosenItem.Location }} </b></p>
+                    <p id="modalVolume">Volume: <b> {{ this.chosenItem.Volume }} </b></p>
+                    <p id="modalPage">Page: <b> {{ this.chosenItem.Page }} </b></p>
+                    <p id="modalOriginalRef">Original Reference: <b> {{ this.chosenItem.OriginalRef }} </b></p>
+                    <p id="modalNotes">Notes: <b> {{ this.chosenItem.Notes }} </b></p>
+                    <p></p>
+                    <p>Links to other databases can be shown here.</p>
+                </div>
+
+                <button class="close float-right" onclick="closeModal()">Close</button>
+
+                <!--v-btn color="gray" dark id="modalVideo">Video</v-btn>
+                                <v-btn color="gray" dark id="modalLyrics" v-slot:[`this.chosenItem.lyricsURL`]="{ value }"><span v-if=value v-bind:href="value"> Lyrics </span></v-btn-->
+
+            </div>
+            <!--modal content-->
+
+        </div>
+        <!--modal div-->
+
+    </div>
+
+
+
+
+    <script>
+        function linkToOtherWindow(url) {
+            window.open(url, '_blank')
+        };
+
+
+        const myueApp = new Vue({
+            el: "#app",
+            vuetify: new Vuetify(),
+            data() {
+                return {
+                    headers: [{
+                            text: 'Surname',
+                            align: 'start',
+                            sortable: true,
+                            value: 'Surname',
+                        }, {
+                            text: 'First Name',
+                            value: 'Firstname'
+                        }, {
+                            text: 'Date',
+                            value: 'Date'
+                        }, {
+                            text: 'Location',
+                            value: 'Location'
+                        },
+
+
+                        {
+                            text: 'Volume',
+                            value: 'Volume'
+                        }, {
+                            text: 'Page',
+                            value: 'Page'
+                        }, {
+                            text: 'Original Reference',
+                            value: 'OriginalRef'
+                        }, {
+                            text: 'Notes',
+                            value: 'Notes'
+                        }
+
+                    ],
+
+                    search: '',
+                    sortBy: 'Surname',
+                    sortDesc: false,
+                    DetailsDialog: false,
+                    showDetailsDialog: false,
+                    dialog: false,
+                    chosenItem: {}
+
+
+
+                }
+            },
+            methods: {
+                handleClick(details) {
+                    this.chosenItem = details;
+                    console.log(this.chosenItem.Surname)
+                    let modal = document.getElementById("myModal");
+                    modal.style.display = "block";
+
+                    console.log(masterDB.indexOf(this.chosenItem));
+                    let DBIndex = masterDB.indexOf(this.chosenItem);
+                    console.log(masterDB[DBIndex].Surname);
+
+                    let span = document.getElementsByClassName("close")[0];
+
+
+                    // When the user clicks on <span> (x), close the modal
+                    //span.onclick = function() {
+                    //    modal.style.display = "none";
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    };
+                }
+            },
+
+
+        });
+
+        function closeModal() {
+            let modal = document.getElementById("myModal");
+            modal.style.display = "none"
+        }
+    </script>
+
+
+    <style lang="scss" scoped>
+        #apiTable {
+            font-size: 10pt;
+        }
+        /*
+            .table-hover tr:hover {
+                background-color: #D2D2D2;
+            }
+            */
+        
+        nav {
+            margin-bottom: 20px;
+        }
+        
+        .selected {
+            color: red;
+        }
+        
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 40%;
+            border-radius: 5px;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        img {
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .container {
+            padding: 2px 16px;
+            margin-top: 20px;
+            margin-left: 100px;
+            margin-right: 100px;
+        }
+        
+        .input-group mb-1 {
+            width: 200px;
+        }
+        
+        ul {
+            list-style-type: none;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+
+
+</html>
