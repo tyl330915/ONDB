@@ -229,11 +229,23 @@
                         <td id="modalNotes" contenteditable="true"></td>
                     </tr>
                 </table>
-                <div>
-                    <button onclick="discardChanges()" class="button btn-sm btn-warning">Discard Changes</button>
-                    <button onclick="saveChanges()" class="button btn-sm btn-danger float-right">Save Changes</button>
 
+
+                <div class="container">
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <button onclick="deleteRecord()" class="button btn-sm btn-danger">Delete Record</button>
+                        </div>
+                        <div class="col-4">
+                            <button onclick="discardChanges()" class="button btn-sm btn-warning mx-auto">Discard Changes</button>
+                        </div>
+                        <div class="col-4">
+                            <button onclick="saveChanges()" class="button btn-sm btn-success float-right">Save Changes</button>
+                        </div>
+                    </div>
                 </div>
+
+
 
             </div>
 
@@ -266,6 +278,16 @@
         modal.style.display = "none";
         alert("No changes made.")
     };
+
+    function deleteRecord() {
+        if (confirm('Are you sure you want to delete this record from the database?')) {
+            // Save it!
+            alert('Record was deleted.');
+        } else {
+            // Do nothing!
+            alert('Record was not deleted.');
+        }
+    }
 </script>
 
 </html>
