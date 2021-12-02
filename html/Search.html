@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<head>
+    <script src="../js/tableHelpers.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../json/ONDB.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/localSearch.js" type="text/javascript" charset="utf-8"></script>
+    <!--script src="../js/searchHelpers.js" type="text/javascript" charset="utf-8"></script-->
+    <link href="../css/all.css" rel="stylesheet" type="text/css">
+
+
+
+    <!--link href="https://cdn.jsdelivr.net/npm/vuetify@2.2.0/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuex@3.2.0/dist/vuex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.3.0/dist/vuetify.js"></script-->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <!--script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script-->
+
+    <style>
+        .table {
+            font-size: .7vw;
+        }
+        
+        form {
+            width: 95%;
+        }
+        
+        .table-hover tr:hover {
+            background-color: #D2D2D2;
+        }
+        
+        nav {
+            margin-bottom: 20px;
+        }
+        
+        .selected {
+            color: red;
+        }
+        
+        .form-row {
+            margin-top: 10px;
+        }
+        
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        img {
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .container {
+            padding: 2px 16px;
+            margin-top: 20px;
+            max-width: 90%;
+        }
+        
+        .input-group-prepend {
+            margin-left: 10px;
+        }
+        
+        #buttonDiv {
+            margin-top: 20px;
+        }
+        
+        #yearChoice {
+            width: 100px;
+            border-style: solid;
+            border-width: 3px;
+            text-align: center;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
+
+
+</head>
+
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">ONDB</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="../Index.html">Home </a>
+                <a class="nav-item nav-link active" href="#">Search</a><span class="sr-only">(current)</span>
+                <a class="nav-item nav-link" href="Add.html">Add</a>
+                <a class="nav-item nav-link" href="Edit.html">Edit</a>
+                <a class="mr-sm-2 nav-item nav-link" href="Info.html">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div class="card col-9 mx-auto">
+        <div class="card-body">
+            <h3 style="color: lightgrey">Search</h3>
+            <button onclick="resetForm()" class="button btn-sm btn-primary float-right ml-20">Reset Form</button>
+            <form id="searchForm">
+
+                <div class="form-row" class="col-9">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">Surname:</span>
+                    </div>
+                    <input type="text" placeholder="Surname" id="Surname" name="Surname" class="form-control col-3"></input>
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">First Name:</span>
+                    </div>
+                    <input type="text" placeholder="firstName" id="firstName" name="firstName" class="form-control col-3"></input>
+
+                </div>
+
+
+                <div class="form-row" class="col-12" style="margin-top: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">Year:</span>
+                    </div>
+                    <select name="yearChoice" id="yearChoice" class="text-center border" onchange="yearOption()">
+                                <option value="is">is</option>
+                                <option value="before">is before</option>
+                                <option value="after">is after</option>
+                                <!--option value="about">is about (+/-5 years)</option-->
+                            <option value="between">is between</option>
+                            </select>
+                    <!--v-select :items="choices" id="yearChoice" dense outlined></v-select-->
+
+                    <input type="number" placeholder="Year" id="Year" name="Year" class="form-control col-2"></input>
+                    <input type="number" placeholder="Year2" id="Year2" name="Year2" class="form-control col-2" style="display: none"></input>
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">Location:</span>
+
+                    </div>
+                    <input type="text" placeholder="Loc" id="Loc" name="Loc" class="form-control col-3"></input>
+                    <div id="sliderVal "> </div-->
+
+                    </div>
+            </form>
+
+            </div>
+
+        </div>
+
+
+        <p></p>
+        <div class="col-12">
+            <button onclick="nestedFilter(masterDB)" class="button btn-sm btn-danger float-right">Submit</button>
+        </div>
+        <hr>
+        <div id="messageArea" class="mx-auto"></div>
+        <p></p>
+
+        <div class="row justify-content-center ">
+            <div class="col-11 ">
+                <table id="searchTable" class="table table-hover table-sm table-striped"></table>
+
+                <!--v-data-table v-if="Object.keys(searchResults).length !=0 " :headers="headers " :items="searchResults " :items-per-page="20 " :sort-by.sync="sortBy " :sort-desc.sync="sortDesc " dense @click:row="handleClick($event)">
+                    </v-data-table-->
+
+            </div>
+        </div>
+
+
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content" style="width: 40%">
+                <div class="modal-header">
+
+                    <h4>Record Details</h4>
+                    <span class="close">Exit</span>
+                </div>
+
+                <table class="modalTable">
+                    <tr>
+                        <td>Surname: </td>
+                        <td id="modalSurname"></td>
+                    </tr>
+                    <tr>
+                        <td>Firstname: </td>
+                        <td id="modalFirstname"></td>
+                    </tr>
+                    <tr>
+                        <td>Year: </td>
+                        <td id="modalYear"></td>
+                    </tr>
+                    <tr>
+                        <td>Location: </td>
+                        <td id="modalLoc"></td>
+                    </tr>
+                    <tr>
+                        <td>Volume: </td>
+                        <td id="modalVolume"></td>
+                    </tr>
+                    <tr>
+                        <td>Pages: </td>
+                        <td id="modalPages"></td>
+                    </tr>
+                    <tr>
+                        <td>Original reference: </td>
+                        <td id="modalOrigRef"></td>
+                    </tr>
+                    <tr>
+                        <td>Notes: </td>
+                        <td id="modalNotes"></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+</body>
+
+
+<script></script>
+
+</html>

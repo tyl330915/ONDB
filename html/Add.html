@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script lang="javascript" src="../js/xlsx.full.min.js"></script>
+    <title>Add Record</title>
+</head>
+
+
+
+<!--body onload="loadRecType()"-->
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">ONDB</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="../Index.html">Home </a>
+                <a class="nav-item nav-link" href="Search.html">Search</a>
+                <a class="nav-item nav-link active" href="#">Add</a>
+                <a class="nav-item nav-link" href="Edit.html">Edit</a><span class="sr-only">(current)</span>
+                <a class="mr-sm-2 nav-item nav-link" href="Info.html">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <h5 class="d-flex justify-content-around">This page will be accessible by registered editors to add records. </h5>
+    <h6 class="d-flex justify-content-around">It is here for demonstration purposes only.</h6>
+
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form id="addForm">
+                    <h5 style="color: lightgray">Add Individual Record</h5>
+
+                    <div class="form-row">
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder="Surname*" id="Surname" name="Surname" required>
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" placeholder="Firstname*" id="Firstname" name="Firstname" required>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" placeholder="Location" id="Location" name="Location" required>
+                        </div>
+                        <div class="col-1">
+                            <input type="number" class="form-control" placeholder="Age" id="Age" name="Age">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-2">
+                            <input type="number" class="form-control" placeholder="Date" id="Date" name="Date" required>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="Volume*" id="Volume" name="Volume" required></input>
+                        </div>
+                        <div class="col-1">
+                            <input type="text" class="form-control" placeholder="Page*" id="Page" name="Page" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-6">
+                            <input type="text" class="form-control" placeholder="OriginalRef*" id="OriginalRef" name="OriginalRef" required>
+                        </div>
+                        <div class="col-2">
+                            <select type="text" class="form-control" placeholder="recordType" id="recordType" name="recordType"></select>
+                        </div>
+
+                        <div class="col-4">
+                            <input type="text" class="form-control" placeholder="Occupation" id="Occupation" name="Occupation">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control" placeholder="Notes" id="Notes" name="Notes">
+                        </div>
+                    </div>
+
+                    <div class="form-row float-right">
+                        <button type="submit" class="button btn-sm btn-primary">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <p id="messageArea"></p>
+
+        <hr>
+
+        <div class="card">
+            <div id="spreadsheetForm">
+                <h5 style="color: lightgray">Add Records from Spreadsheet</h5>
+
+                <div class="row">
+                    <div class="col-7">Load the Excel spreadsheet with your data:
+                        <p></p>
+
+                        <input type="file" class="form-control-file" id="importButton" onchange="displayData(event)">
+                        <!--button @click = 'readONDBFile'>Show Existing Data</button-->
+                    </div>
+
+                    <div class="col-5 float-right" id="saveBlock" style="display: none">
+                        <b>If the data looks correct,</b>&nbsp <button class="btn btn-danger btn-sm" onclick="postSSData()">Upload data</button>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div id="tableDiv" class="mx-auto" style="width: 80%; display:none">
+                Sample data: <br>
+                <table id="sampleTable" class="table table-sm table-striped"></table>
+            </div>
+
+
+            <script src="../js/tableHelpers.js" type="text/javascript" charset="utf-8"></script>
+            <!--script src="../js/addHelpers.js" type="text/javascript" charset="utf-8"></script-->
+            <script src="../js/addSSHelpers.js" type="text/javascript" charset="utf-8"></script>
+
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+
+
+
+
+</html>
+
+<script>
+</script>
+
+<style>
+    .card {
+        margin-top: 20px;
+    }
+    
+    .form-row {
+        margin-top: 20px;
+    }
+    
+    #spreadsheetForm {
+        margin-left: 50px;
+    }
+    
+    table {
+        font-size: 0.7vw;
+    }
+</style>
