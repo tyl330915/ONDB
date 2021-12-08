@@ -11,10 +11,11 @@
 <script src="https://cdn.jsdelivr.net/npm/vuex@3.2.0/dist/vuex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.3.0/dist/vuetify.js"></script>
 
-<!--script src="./js/TableMaker.js" type="text/javascript" charset="utf-8"></script>
-<script src="./js/APIHelpers.js" type="text/javascript" charset="utf-8"></script-->
+<script src="./js/TableMaker.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/APIHelpers.js" type="text/javascript" charset="utf-8"></script>
 <script src="./json/ONDB.js" type="text/javascript" charset="utf-8"></script>
 <link href="./css/all.css" rel="stylesheet" type="text/css">
+
 
 
 </head>
@@ -36,6 +37,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link" href="./html/Search.html">Search</a>
+                <a class="nav-item nav-link" href="./html/FuzzySearch.html">Fuzzy Search</a>
                 <a class="nav-item nav-link" href="./html/Add.html">Add</a>
                 <a class="nav-item nav-link" href="./html/Edit.html">Edit</a>
                 <a class="mr-sm-2 nav-item nav-link" href="./html/Info.html">Contact Us</a>
@@ -124,7 +126,7 @@
                     <p>Links to other databases can be shown here.</p>
                 </div>
 
-                <button class="btn btn-sm close float-right" style="font-size: 14pt" onclick="closeModal()">Close</button>
+                <button class="close float-right" onclick="closeModal()">Close</button>
 
                 <!--v-btn color="gray" dark id="modalVideo">Video</v-btn>
                                 <v-btn color="gray" dark id="modalLyrics" v-slot:[`this.chosenItem.lyricsURL`]="{ value }"><span v-if=value v-bind:href="value"> Lyrics </span></v-btn-->
@@ -232,6 +234,15 @@
 
 
     <style lang="scss" scoped>
+        #apiTable {
+            font-size: 10pt;
+        }
+        /*
+            .table-hover tr:hover {
+                background-color: #D2D2D2;
+            }
+            */
+        
         nav {
             margin-bottom: 20px;
         }

@@ -7,9 +7,11 @@
     <script src="../js/tableHelpers.js" type="text/javascript" charset="utf-8"></script>
     <script src="../json/ONDB.js" type="text/javascript" charset="utf-8"></script>
     <script src="../js/localSearch.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/fuzzyCode.js" type="text/javascript" charset="utf-8"></script>
     <!--script src="../js/searchHelpers.js" type="text/javascript" charset="utf-8"></script-->
     <link href="../css/all.css" rel="stylesheet" type="text/css">
 
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 
 
     <!--link href="https://cdn.jsdelivr.net/npm/vuetify@2.2.0/dist/vuetify.min.css" rel="stylesheet">
@@ -85,7 +87,7 @@
             margin-right: 10px;
         }
     </style>
-
+    <title>Fuzzy Search</title>
 
 </head>
 
@@ -101,33 +103,43 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link" href="../Index.html">Home </a>
                 <a class="nav-item nav-link" href="Search.html">Search</a><span class="sr-only">(current)</span>
-                <a class="nav-item nav-link" href="FuzzySearch.html">Fuzzy Search</a>
+                <a class="nav-item nav-link active" href=#>Fuzzy Search</a>
                 <a class="nav-item nav-link" href="Add.html">Add</a>
-                <a class="nav-item nav-link active" href="#">Edit</a>
+                <a class="nav-item nav-link" href="Edit.html">Edit</a>
                 <a class="mr-sm-2 nav-item nav-link" href="Info.html">Contact Us</a>
             </div>
         </div>
     </nav>
 
-    <div>
-        <h5 class="d-flex justify-content-around">This page will be accessible by registered editors to edit records. </h5>
-        <h6 class="d-flex justify-content-around">It is here for demonstration purposes only.</h6>
-    </div>
+
 
     <div class="card col-9 mx-auto">
         <div class="card-body">
-            <h3 style="color: lightgrey">Search for a record to edit:</h3>
+            <h3 style="color: lightgrey">Search</h3>
             <button onclick="resetForm()" class="button btn-sm btn-primary float-right ml-20">Reset Form</button>
             <form id="searchForm">
 
                 <div class="form-row" class="col-9">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon3">Surname:</span>
+                        <span class="input-group-text" id="basic-addon3" style="height: 70%">Surname:</span>
                     </div>
                     <input type="text" placeholder="Surname" id="Surname" name="Surname" class="form-control col-3"></input>
 
+                    <div id="fuzzyControls">
+                        <input type="range" min="60" max="100" value="80" class="slider" id="fuzzySlider">
+
+                        <br>
+                        <div id="fuzzDisplay">Value: <span id="fuzzyValue"></span>%</div>
+                    </div>
+
+                    <!--div id="checkDiv">
+                        <input type="checkbox" name="checkBox" id="exactCheck">
+                        <div>Closeness</div>
+                    </div-->
+
+
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon3">First Name:</span>
+                        <span class="input-group-text" id="basic-addon3" style="height: 70%">First Name:</span>
                     </div>
                     <input type="text" placeholder="firstName" id="firstName" name="firstName" class="form-control col-3"></input>
 
@@ -167,7 +179,7 @@
 
         <p></p>
         <div class="col-12">
-            <button onclick="nestedFilter(masterDB)" class="button btn-sm btn-danger float-right">Submit</button>
+            <button onclick="fuzzyName(masterDB)" class="button btn-sm btn-danger float-right">Submit</button>
         </div>
         <hr>
         <div id="messageArea" class="mx-auto"></div>
@@ -199,43 +211,37 @@
                 <table class="modalTable">
                     <tr>
                         <td>Surname: </td>
-                        <td id="modalSurname" contenteditable="true"></td>
+                        <td id="modalSurname"></td>
                     </tr>
                     <tr>
                         <td>Firstname: </td>
-                        <td id="modalFirstname" contenteditable="true"></td>
+                        <td id="modalFirstname"></td>
                     </tr>
                     <tr>
                         <td>Year: </td>
-                        <td id="modalYear" contenteditable="true"></td>
+                        <td id="modalYear"></td>
                     </tr>
                     <tr>
                         <td>Location: </td>
-                        <td id="modalLoc" contenteditable="true"></td>
+                        <td id="modalLoc"></td>
                     </tr>
                     <tr>
                         <td>Volume: </td>
-                        <td id="modalVolume" contenteditable="true"></td>
+                        <td id="modalVolume"></td>
                     </tr>
                     <tr>
                         <td>Pages: </td>
-                        <td id="modalPages" contenteditable="true"></td>
+                        <td id="modalPages"></td>
                     </tr>
                     <tr>
                         <td>Original reference: </td>
-                        <td id="modalOrigRef" contenteditable="true"></td>
+                        <td id="modalOrigRef"></td>
                     </tr>
                     <tr>
                         <td>Notes: </td>
-                        <td id="modalNotes" contenteditable="true"></td>
+                        <td id="modalNotes"></td>
                     </tr>
                 </table>
-                <div>
-                    <button onclick="discardChanges()" class="button btn-sm btn-warning">Discard Changes</button>
-                    <button onclick="saveChanges()" class="button btn-sm btn-danger float-right">Save Changes</button>
-
-                </div>
-
             </div>
 
         </div>
@@ -244,29 +250,34 @@
 
 
 <script>
-    const modal = document.getElementById("myModal");
-    //const message = document.getElementById("messageArea").innerText;
+    //let fuzzyValue = 0; //default value
+    let checkedValue = "false";
 
-    function saveChanges() {
-        //You will need to get the ID of the original record to do this
-        let changedRecord = {};
-        changedRecord.Surname = document.getElementById("modalSurname").innerHTML;
-        changedRecord.Firstname = document.getElementById("modalFirstname").innerHTML;
-        changedRecord.Year = document.getElementById("modalYear").innerHTML;
-        changedRecord.Loc = document.getElementById("modalLoc").innerHTML;
-        changedRecord.Volume = document.getElementById("modalVolume").innerHTML;
-        changedRecord.Pages = document.getElementById("modalPages").innerHTML;
-        changedRecord.OriginalRef = document.getElementById("modalOrigRef").innerHTML;
-        changedRecord.Notes = document.getElementById("modalNotes").innerHTML;
-        console.table(changedRecord);
-        modal.style.display = "none";
-        alert("Record changed.");
+    const slider = document.getElementById("fuzzySlider");
+    const output = document.getElementById("fuzzyValue");
+    output.innerHTML = slider.value;
+
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+        fuzzyValue = reverseFuzzy(this.value);
     };
 
-    function discardChanges() {
-        modal.style.display = "none";
-        alert("No changes made.")
-    };
+    /*
+        const checkbox = document.querySelector("input[name=checkBox]");
+
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                checkedValue = "true";
+                fuzzyValue = 0;
+
+                console.log("Checkbox is checked..");
+            } else {
+                fuzzyValue = reverseFuzzy(slider.value);
+                checkedValue = "false";
+                console.log("Checkbox is not checked..");
+            }
+        });
+    */
 </script>
 
 </html>

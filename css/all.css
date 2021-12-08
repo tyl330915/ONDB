@@ -171,3 +171,28 @@ button {
 tbody tr:nth-of-type(odd) {
     background-color: rgba(0, 0, 0, .05);
 }
+
+.fuzzyControls {
+    width: 80%;
+    /* Width of the outside container */
+}
+
+
+/* The slider itself */
+
+.slider {
+    width: 70%;
+    /* Full-width */
+    height: 25px;
+    /* Specified height */
+    opacity: 0.7;
+    /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s;
+    /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    margin-left: 20px;
+}
+
+#fuzzDisplay {
+    margin-left: 20px;
+}
