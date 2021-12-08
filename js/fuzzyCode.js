@@ -39,9 +39,7 @@ function fuzzyName(targetArray) {
 
         let fuzzyResults = fuse.search(searchSurname);
         //console.log(fuzzyResults.length);
-        console.log(fuzzyResults[0].item.Location);
-        console.table(fuzzyResults[0]);
-        console.log(fuzzyResults[0].refIndex);
+
 
         for (let j = 0; j < fuzzyResults.length; j++) {
             let tempArray = {
